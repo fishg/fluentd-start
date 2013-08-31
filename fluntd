@@ -1,14 +1,14 @@
 #!/bin/bash
 #/etc/init.d/fluentd 
-PID_FILE=/var/run/fluentd.pid
-CONF_FILE=/etc/fluent/fluent.conf
-LOG_FILE=/var/log/fluent/fluent.log
+PID_FILE=/data/fluentd/fluentd.pid
+CONF_FILE=/data/fluentd/fluent.conf
+LOG_FILE=/data/fluentd/fluent/fluent.log
 DEFAULT_RVM_PATH=/usr/local/rvm
-JEMALLOC=jemalloc.sh
+JEMALLOC=/usr/bin/jemalloc.sh
  
-F_USER=fluentd
-F_GROUP=fluentd
-RUBY_VER="1.9.3"
+F_USER=root
+F_GROUP=root
+RUBY_VER="2.0.0"
  
 if [ -z $rvm_path ]; then
   export rvm_path=$DEFAULT_RVM_PATH
