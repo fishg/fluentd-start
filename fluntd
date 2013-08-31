@@ -1,0 +1,118 @@
+#!/bin/bash
+#/etc/init.d/fluentd 
+PID_FILE=/var/run/fluentd.pid
+CONF_FILE=/etc/fluent/fluent.conf
+LOG_FILE=/var/log/fluent/fluent.log
+DEFAULT_RVM_PATH=/usr/local/rvm
+JEMALLOC=jemalloc.sh
+ 
+F_USER=fluentd
+F_GROUP=fluentd
+RUBY_VER="1.9.3"
+ 
+if [ -z $rvm_path ]; then
+  export rvm_path=$DEFAULT_RVM_PATH
+fi
+ 
+activate_rvm()
+{
+  source $rvm_path/scripts/rvm
+  rvm use $RUBY_VER 1> /dev/null
+}
+ 
+prepare_dirs()
+{
+  mkdir -p $(dirname $LOG_FILE)
+  mkdir -p $(dirname $PID_FILE)
+}
+ 
+is_alive()
+{
+  if [ -f "$PID_FILE" ]; then
+    kill -0 $(cat "$PID_FILE") > /dev/null 2>&1
+    return $?
+  else
+    return 1
+  fi
+}
+ 
+start()
+{
+  if is_alive; then
+    echo "fluentd already started."
+    return 1
+  else
+    if [ -f $PID_FILE ]; then rm -f $PID_FILE; fi
+  fi
+  prepare_dirs
+  activate_rvm
+  echo -n "Starting fluentd: "
+  $JEMALLOC fluentd --daemon $PID_FILE --user $F_USER --group $F_GROUP --config $CONF_FILE --log $LOG_FILE
+  echo "done."
+}
+ 
+stop()
+{
+  if [ ! -f "$PID_FILE" ] || [ -z $(cat "$PID_FILE") ]; then
+    echo "fluentd is not running"
+    return 0
+  fi
+  echo -n "Stopping fluentd: "
+  kill -TERM $(cat "$PID_FILE")
+  count=0
+  while is_alive; do
+    count=`expr $count + 1`
+    if [ $count == 60 ]; then
+      echo " failed."
+      return 1
+    fi
+    sleep 1
+  done
+  rm -f $PID_FILE
+  echo "done."
+}
+ 
+restart()
+{
+  stop && start
+}
+ 
+reload()
+{
+  if is_alive; then
+    kill -HUP $(cat "$PID_FILE")
+  else
+    echo "fluentd is not running"
+  fi
+}
+ 
+update()
+{
+  activate_rvm
+  gem update fluentd
+}
+ 
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  reload)
+    reload
+    ;;
+  update)
+    stop
+    update
+    start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|reload|update}"
+    exit 1
+    ;;
+esac
+exit $?
