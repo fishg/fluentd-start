@@ -8,7 +8,7 @@ JEMALLOC=/usr/bin/jemalloc.sh
  
 F_USER=root
 F_GROUP=root
-RUBY_VER="2.0.0"
+RUBY_VER="1.9.3"
  
 if [ -z $rvm_path ]; then
   export rvm_path=$DEFAULT_RVM_PATH
