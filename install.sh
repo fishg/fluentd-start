@@ -43,6 +43,7 @@ echo "export LC_CTYPE=\"UTF-8\"" >> /etc/rc.local
 export LC_CTYPE="UTF-8" 
 #export LC_ALL="UTF-8"
 \curl -L https://get.rvm.io | bash
+/bin/bash --login
 echo "export PATH=/usr/local/rvm/bin:\$PATH" >> /etc/rc.local
 export PATH=/usr/local/rvm/bin:$PATH
 rvm get stable
