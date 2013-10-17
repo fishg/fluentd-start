@@ -5,7 +5,7 @@ jemalloc_install_dir="/usr/local"
 fluentd_config_dir="/data/fluentd"
 ruby_version="1.9.3"
 
-yum install -y git php zlib-devel wget curl ruby gcc make
+yum install -y git php zlib-devel wget curl ruby gcc make libxml2-devel libxslt-devel
 
 cd $install_dir
 wget http://pear.php.net/go-pear.phar
