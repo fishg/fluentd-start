@@ -11,7 +11,7 @@ cd $install_dir
 wget http://pear.php.net/go-pear.phar
 php go-pear.phar
 pear config-set auto_discover 1
-pear install pear.phpqatools.org/phpqatools pear.netpirates.net/phpDox
+pear install pear.phpqatools.org/phpqatools pear.netpirates.net/phpDox-0.5.0
 
  
 #系统参数调节,如果已经修改过,不必运行这一段
