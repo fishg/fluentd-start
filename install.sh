@@ -1,9 +1,16 @@
-#!/bin/sh
+#!/bin/bash --login
 #注意:fluentd forward端口需要tpc和 udp 都支持
 install_dir="/root/soft"
 jemalloc_install_dir="/usr/local"
 fluentd_config_dir="/data/fluentd"
 ruby_version="1.9.3"
+
+yum install -y git php zlib-devel wget curl ruby gcc make
+
+cd $install_dir
+wget http://pear.php.net/go-pear.phar
+php go-pear.phar
+pear install phpunit pear/PHP_Compat
  
 #系统参数调节,如果已经修改过,不必运行这一段
 ulimit -n 65535
